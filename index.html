@@ -1,0 +1,975 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<!-- 
+  =======================================================================================
+  ÍNDICE DE FALLOS DE ACCESIBILIDAD - DOCUMENTO DE PRÁCTICA
+  =======================================================================================
+  
+  ESTE DOCUMENTO CONTIENE MÚLTIPLES FALLOS DE ACCESIBILIDAD INTENCIONADOS
+  PARA SU CORRECCIÓN COMO EJERCICIO DE CLASE.
+  
+  ÍNDICE DE FALLOS:
+  ---------------------------------------------------------------------------------------
+  
+  ✗ FALLO 1: Idioma del documento ausente (lang)
+    Ubicación: Línea 31 - <html>
+    Problema: No tiene atributo lang
+    Mejora: Añadir lang="es"
+    Impacto: Lectores de pantalla usan pronunciación incorrecta
+  
+  ✗ FALLO 2: Contraste muy bajo y tamaño de texto insuficiente
+    Ubicación: Líneas 65-70 - CSS body
+    Problema: Texto 10px con color #0f0f10 sobre fondo #0f0f10 (contraste 1:1)
+    Mejora: Mínimo 16px y contraste 4.5:1 para texto normal
+    Impacto: Texto ilegible para usuarios con baja visión
+  
+  ✗ FALLO 3: Indicador de foco eliminado completamente
+    Ubicación: Línea 71 - CSS *:focus
+    Problema: outline: none elimina indicador visual
+    Mejora: Restaurar outline o crear indicador personalizado visible
+    Impacto: Navegación por teclado imposible de seguir
+  
+  ✗ FALLO 4: Enlaces sin distinción visual
+    Ubicación: Líneas 75-78 - CSS a
+    Problema: color: var(--bg) hace enlaces invisibles, sin subrayado
+    Mejora: Color con contraste + subrayado o distinción clara
+    Impacto: Usuarios no identifican qué es clickeable
+  
+  ✗ FALLO 5: Navegación bloqueada con tabindex="-1"
+    Ubicación: Líneas 358-434 - Menú de navegación, formularios, botones
+    Problema: tabindex="-1" en todos los elementos interactivos
+    Mejora: Eliminar tabindex="-1" de elementos interactivos
+    Impacto: Teclado no puede acceder a navegación ni controles
+  
+  ✗ FALLO 6: Imágenes sin texto alternativo
+    Ubicación: Líneas 450, 503, 517, 531, etc. - Todas las <img>
+    Problema: Falta atributo alt en todas las imágenes
+    Mejora: alt="" para decorativas, alt="descripción" para informativas
+    Impacto: Lectores de pantalla no describen contenido visual
+  
+  ✗ FALLO 7: Formulario sin etiquetas label asociadas
+    Ubicación: Líneas 702-754 - Formulario de contacto
+    Problema: Usa <span> en lugar de <label>, sin for/id asociados
+    Mejora: Usar <label for="id"> vinculado con input id="id"
+    Impacto: Campos no identificables por tecnologías asistivas
+  
+  ✗ FALLO 8: Estructura de encabezados inconsistente
+    Ubicación: Líneas 346, 439, 472 - Uso de h1, h2, h3, h4
+    Problema: h1 en logo, saltos de h2 a h4 sin h3
+    Mejora: Un solo h1 para título principal, jerarquía h1→h2→h3 sin saltos
+    Impacto: Navegación por encabezados confusa
+  
+  ✗ FALLO 9: Uso incorrecto de elementos semánticos
+    Ubicación: Líneas 486, 500, etc. - <div role="list">
+    Problema: Usa div con role="list" en lugar de <ul> nativo
+    Mejora: Usar <ul> y <li> nativos en lugar de div con roles
+    Impacto: Duplicación de semántica, posibles conflictos
+  
+  ✗ FALLO 10: Información transmitida solo por color
+    Ubicación: Líneas 509, 523, 537, etc. - <span class="tag alt/ok/warn">
+    Problema: Categorías distinguidas solo por color
+    Mejora: Añadir iconos, texto o patrones además del color
+    Impacto: Usuarios con daltonismo no distinguen categorías
+  
+  ✗ FALLO 11: Texto no escalable y zoom bloqueado
+    Ubicación: Línea 68 - font: 10px
+    Problema: Tamaños en px fijos impiden escalado
+    Mejora: Usar rem/em, permitir zoom 200%
+    Impacto: Usuarios con baja visión no pueden ampliar texto
+  
+  ✗ FALLO 12: Roles ARIA incorrectos o redundantes
+    Ubicación: Líneas 486, 500 - role="list" en divs
+    Problema: Roles redundantes cuando existen elementos nativos
+    Mejora: Eliminar roles cuando se usan elementos HTML semánticos
+    Impacto: Anuncios duplicados en lectores de pantalla
+  
+  ✗ FALLO 13: Contenido multimedia sin alternativas
+    Ubicación: Todas las imágenes del documento
+    Problema: Sin descripciones textuales adecuadas
+    Mejora: Transcripciones, alt detallados, audio descripciones
+    Impacto: Usuarios ciegos pierden acceso al contenido visual
+  
+  ✗ FALLO 14: Límites de tiempo sin opciones de extensión
+    Ubicación: Línea 789 - Modal sin controles de tiempo
+    Problema: Timeouts sin opción de extender
+    Mejora: Controles para ajustar/extender/eliminar límites
+    Impacto: Usuarios con discapacidad cognitiva sin tiempo suficiente
+  
+  ✗ FALLO 15: Animaciones sin opción de desactivar
+    Ubicación: Líneas 200-204, 245-247 - Transiciones CSS
+    Problema: No respeta prefers-reduced-motion
+    Mejora: @media (prefers-reduced-motion: reduce) para desactivar
+    Impacto: Mareos y náuseas en usuarios con trastornos vestibulares
+  
+  =======================================================================================
+  REQUERIMIENTOS PARA LA CORRECCIÓN:
+  =======================================================================================
+  
+  1. Añadir lang="es" al elemento <html>
+  2. Aumentar tamaño de fuente a mínimo 16px
+  3. Mejorar contraste a mínimo 4.5:1
+  4. Restaurar indicadores de foco visibles
+  5. Hacer enlaces distinguibles (color + subrayado)
+  6. Eliminar todos los tabindex="-1" de elementos interactivos
+  7. Añadir atributo alt a todas las imágenes
+  8. Convertir spans a labels con for/id en formularios
+  9. Corregir jerarquía de encabezados
+  10. Usar elementos HTML nativos en lugar de div con roles
+  11. Añadir indicadores no-color para categorías
+  12. Usar unidades relativas (rem/em)
+  13. Añadir descripciones completas a multimedia
+  14. Implementar controles de tiempo
+  15. Añadir @media (prefers-reduced-motion: reduce)
+  
+  =======================================================================================
+-->
+
+<html> 
+<!-- ✗ FALLO 1: AUSENCIA DE ATRIBUTO LANG -->
+<!-- PROBLEMA: El elemento <html> no tiene el atributo lang -->
+<!-- CORRECCIÓN NECESARIA: Añadir lang="es" → <html lang="es"> -->
+<!-- IMPACTO: Los lectores de pantalla no pueden identificar el idioma y usarán pronunciación incorrecta -->
+<head>
+  <meta charset="UTF-8" /> 
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" /> 
+
+  
+  <meta
+    name="description"
+    content="Guía completa de Inteligencia Artificial: Machine Learning, Deep Learning, LLMs, RAG, datos, evaluación, seguridad y despliegue."
+  /> 
+  <meta name="robots" content="index, follow" /> 
+  <meta name="theme-color" content="#0f0f10" /> 
+
+  
+  <meta property="og:title" content="AILab — Inteligencia Artificial" /> 
+  <meta
+    property="og:description"
+    content="Aprende IA con diseño moderno, Flexbox y estructura semántica."
+  /> 
+  <meta
+    property="og:image"
+    content="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1400&q=80"
+  /> 
+  <meta property="og:type" content="website" /> 
+  <meta property="og:url" content="#" /> 
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" /> 
+
+  <title>Inteligencia Artificial</title> 
+
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+
+<body>
+
+  <!-- ==================== CONTENIDO PRINCIPAL ==================== -->
+  
+  <!-- ✗ FALLO 8: ESTRUCTURA DE ENCABEZADOS INCONSISTENTE -->
+  <!-- PROBLEMA: h1 usado para el logo en lugar del título principal del documento -->
+  <!-- CORRECCIÓN: Usar h1 para el título principal de la página, no para el logo -->
+  <!-- IMPACTO: Navegación por encabezados confusa, estructura semántica incorrecta -->
+  <header class="topbar site-header"> 
+    <div class="wrap topbar__inner"> 
+      <h1 class="brand">AI<span>Lab</span></h1> <!-- h1 en logo = incorrecto -->
+
+      <!-- ✗ FALLO 5: NAVEGACIÓN COMPLETAMENTE INACCESIBLE POR TECLADO -->
+      <!-- PROBLEMA: TODOS los enlaces y controles tienen tabindex="-1" -->
+      <!-- CORRECCIÓN: Eliminar tabindex="-1" de todos los elementos interactivos -->
+      <!-- IMPACTO: Usuarios que navegan con teclado no pueden acceder al menú -->
+      <nav id="menu"> 
+        <div class="wrap">
+          <!-- ✗ FALLO 5: Checkbox del menú móvil inaccesible -->
+          <input tabindex="-1" type="checkbox" id="responsive-menu" onclick="updatemenu()" /> 
+          <label for="responsive-menu"></label> 
+
+          <ul> 
+            <!-- ✗ FALLO 5: Todos los enlaces bloqueados con tabindex="-1" -->
+            <li><a tabindex="-1" href="#inicio">Inicio</a></li> 
+
+            <li>
+              <a tabindex="-1" class="dropdown-arrow" href="#fundamentos">Fundamentos</a> 
+              <ul class="sub-menus"> 
+                <li><a tabindex="-1" href="#fundamentos">Visión general</a></li>
+                <li><a tabindex="-1" href="#fundamentos">Machine Learning</a></li>
+                <li><a tabindex="-1" href="#fundamentos">Deep Learning</a></li>
+                <li><a tabindex="-1" href="#fundamentos">IA Generativa</a></li>
+              </ul>
+            </li>
+
+            <li>
+              <a tabindex="-1" class="dropdown-arrow" href="#modelos">Modelos</a> 
+              <ul class="sub-menus"> 
+                <li><a tabindex="-1" href="#modelos">LLMs</a></li>
+                <li><a tabindex="-1" href="#modelos">RAG</a></li>
+                <li><a tabindex="-1" href="#modelos">Fine-tuning</a></li>
+                <li><a tabindex="-1" href="#modelos">Evaluación</a></li>
+              </ul>
+            </li>
+
+            <li><a tabindex="-1" href="#pipeline">Pipeline IA</a></li> 
+            <li><a tabindex="-1" href="#aplicaciones">Aplicaciones</a></li> 
+            <li><a tabindex="-1" href="#guia">Guía diseño</a></li> 
+            <li><a tabindex="-1" href="#contacto">Contacto</a></li> 
+          </ul>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  
+  
+  <main id="contenido" class="site-main"> 
+
+    
+    
+    <section id="inicio" class="hero hero--primary"> 
+      <div class="wrap hero__content"> 
+        <div class="hero__text"> 
+          <!-- FALLO 8: salto de h1 a h2 sin contexto claro -->
+          <h2>Inteligencia Artificial: modelos, datos y despliegue</h2> 
+          <div class="hero-kpis"> 
+            <!-- FALLO 10: información transmitida solo por color en badges -->
+            <div class="kpi"><b>01</b> Fundamentos (ML/DL)</div> 
+            <div class="kpi"><b>02</b> IA Generativa (LLMs)</div> 
+            <div class="kpi"><b>03</b> RAG + Datos</div> 
+            <div class="kpi"><b>04</b> Evaluación + Deploy</div> 
+          </div>
+
+          <hr class="hr" /> 
+
+          <div class="mini-grid"> 
+            <div class="mini"> 
+              <!-- FALLO 8: salto a h4 sin h3 -->
+              <h4>Enfoque</h4>
+              <p>Conceptos esenciales y estructura clara para proyectos de IA.</p>
+            </div>
+            <div class="mini">
+              <h4>Contenido</h4>
+              <p>Listas, tablas y secciones con comparativas y checklist.</p>
+            </div>
+            <div class="mini">
+              <h4>Producción</h4>
+              <p>Evaluación, seguridad, monitorización y control de costes.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FALLO 6: imagen informativa sin texto alternativo -->
+        <figure class="hero-media"> 
+          <img
+            src="https://images.unsplash.com/photo-1531297484001-80022131f5a1?auto=format&fit=crop&w=1400&q=80"
+          /> 
+        </figure>
+      </div>
+    </section>
+
+    
+    
+    <section id="fundamentos" class="section"> 
+      <div class="wrap">
+        <h2>Fundamentos de IA</h2> 
+        
+        
+        <div class="controls"> 
+          <div class="search"> 
+            <!-- FALLO 7: span usado en lugar de label -->
+            <span>Buscar</span> 
+            <!-- FALLO 5: input de búsqueda inaccesible por teclado -->
+            <input tabindex="-1" id="searchCards" type="text" placeholder="Filtrar tarjetas (ML, LLM, RAG, Datos...)" /> 
+          </div>
+          <!-- FALLO 5: botones inaccesibles por teclado -->
+          <button tabindex="-1" id="btnScrollTop" class="btn secondary" type="button">Subir arriba</button> 
+          <button tabindex="-1" id="btnRandomTip" class="btn" type="button">Tip aleatorio</button> 
+        </div>
+
+        <div id="tipBox" class="callout" style="display:none;"> 
+          <b>Tip:</b> <span id="tipText">...</span> 
+        </div>
+
+        <!-- FALLO 9: uso redundante de role="list" cuando debería ser ul nativo -->
+        <div class="cards" id="cardsFundamentos" role="list"> 
+          <!-- FALLO 9: uso redundante de role="listitem" cuando debería ser li nativo -->
+          <article class="card" role="listitem" data-title="machine learning ml datos supervisado no supervisado"> 
+            <!-- FALLO 6: imagen informativa sin alt -->
+            <img
+              src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1400&q=80"
+            /> 
+            <div class="card__body"> 
+              <h3>Machine Learning</h3>
+              <p>Aprendizaje a partir de datos: supervisado, no supervisado y por refuerzo.</p>
+              <div class="card__meta">
+                <!-- FALLO 10: información solo por color -->
+                <span class="tag">Datos</span>
+                <span class="tag alt">Predicción</span>
+                <span class="tag">Generalización</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="card" role="listitem" data-title="deep learning dl redes neuronales backprop embeddings"> 
+            <!-- FALLO 6: imagen sin alt -->
+            <img
+              src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1400&q=80"
+            />
+            <div class="card__body">
+              <h3>Deep Learning</h3>
+              <p>Redes neuronales profundas para visión, audio, texto y series temporales.</p>
+              <div class="card__meta">
+                <span class="tag">Redes</span>
+                <span class="tag alt">Embeddings</span>
+                <span class="tag">Backprop</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="card" role="listitem" data-title="ia generativa generative diffusion multimodal texto imagen"> 
+            <!-- FALLO 6: imagen sin alt -->
+            <img
+              src="https://images.unsplash.com/photo-1526378722484-bd91ca387e72?auto=format&fit=crop&w=1400&q=80"
+            />
+            <div class="card__body">
+              <h3>IA Generativa</h3>
+              <p>Modelos que crean contenido: texto, imagen, audio, vídeo y código.</p>
+              <div class="card__meta">
+                <span class="tag">LLMs</span>
+                <span class="tag alt">Difusión</span>
+                <span class="tag">Multimodal</span>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <hr class="hr" />
+
+        <div class="grid-2"> 
+          <article class="panel"> 
+            <h3>Calidad del modelo</h3>
+            <p>
+              Un modelo se valida por cómo responde con datos nuevos. Si solo memoriza, en producción
+              falla con ruido, cambios y casos raros.
+            </p>
+            <div class="callout">
+              <b>Clave:</b> validación y test con datos realistas, no solo ejemplos perfectos.
+            </div>
+          </article>
+
+          <article class="panel"> 
+            <h3>Conceptos esenciales</h3>
+            <p>
+              Overfitting, regularización, sesgo/varianza, métricas y separación correcta del dataset.
+            </p>
+            <div class="pill-row">
+              <span class="pill">Overfitting</span>
+              <span class="pill">Regularización</span>
+              <span class="pill">Métricas</span>
+              <span class="pill">Split</span>
+              <span class="pill">Validación</span>
+              <span class="pill">Drift</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    
+    
+    <section id="modelos" class="section section--alt"> 
+      <div class="wrap">
+        <h2>Modelos y técnicas actuales</h2> 
+        <p>
+          Se combinan modelos base con datos propios y contexto externo (RAG). Se mide rendimiento,
+          robustez, seguridad y coste para decidir arquitectura y despliegue.
+        </p>
+
+        <div class="cards" id="cardsModelos" role="list"> 
+
+          <article class="card" role="listitem" data-title="llm modelos de lenguaje transformers tokens prompting"> 
+            <!-- FALLO 6: imagen sin alt -->
+            <img
+              src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1400&q=80"
+            /> 
+            <div class="card__body"> 
+              <h3>LLMs (Modelos de Lenguaje)</h3>
+              <p>Transformers que generan y entienden texto por probabilidad token a token.</p>
+              <div class="card__meta">
+                <span class="tag">Transformers</span>
+                <span class="tag alt">Tokens</span>
+                <span class="tag">Prompting</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="card" role="listitem" data-title="rag retrieval augmented generation embeddings vector db contexto"> 
+            <!-- FALLO 6: imagen sin alt -->
+            <img
+              src="https://images.unsplash.com/photo-1555949963-aa79dcee981c?auto=format&fit=crop&w=1400&q=80"
+            />
+            <div class="card__body">
+              <h3>RAG</h3>
+              <p>Recupera información (vector DB) y la usa como contexto antes de responder.</p>
+              <div class="card__meta">
+                <span class="tag">Embeddings</span>
+                <span class="tag alt">Vector DB</span>
+                <span class="tag">Contexto</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="card" role="listitem" data-title="fine tuning ajuste datos propios calidad coste"> 
+            <!-- FALLO 6: imagen sin alt -->
+            <img
+              src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1400&q=80"
+            />
+            <div class="card__body">
+              <h3>Fine-tuning</h3>
+              <p>Ajusta un modelo con datos específicos para estilo, formato o tareas concretas.</p>
+              <div class="card__meta">
+                <span class="tag">Datos propios</span>
+                <span class="tag warn">Coste</span>
+                <span class="tag alt">Calidad</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="card" role="listitem" data-title="evaluacion metricas test regresion robustez"> 
+            <!-- FALLO 6: imagen sin alt -->
+            <img
+              src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1400&q=80"
+            />
+            <div class="card__body">
+              <h3>Evaluación</h3>
+              <p>Pruebas automáticas + revisión humana: precisión, seguridad y robustez.</p>
+              <div class="card__meta">
+                <span class="tag ok">Métricas</span>
+                <span class="tag alt">Test sets</span>
+                <span class="tag">Regresión</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="card" role="listitem" data-title="agentes tools planificacion automatizacion"> 
+            <!-- FALLO 6: imagen sin alt -->
+            <img
+              src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1400&q=80"
+            />
+            <div class="card__body">
+              <h3>Agentes</h3>
+              <p>Modelos que planifican tareas, llaman herramientas y encadenan pasos.</p>
+              <div class="card__meta">
+                <span class="tag">Tools</span>
+                <span class="tag alt">Plan</span>
+                <span class="tag">Automatizar</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="card" role="listitem" data-title="multimodal vision audio fusion imagen texto"> 
+            <!-- FALLO 6: imagen sin alt -->
+            <img
+              src="https://images.unsplash.com/photo-1518779578993-ec3579fee39f?auto=format&fit=crop&w=1400&q=80"
+            />
+            <div class="card__body">
+              <h3>Multimodal</h3>
+              <p>Texto + imagen + audio: comprensión y generación combinada en un sistema.</p>
+              <div class="card__meta">
+                <span class="tag">Vision</span>
+                <span class="tag alt">Audio</span>
+                <span class="tag">Fusión</span>
+              </div>
+            </div>
+          </article>
+
+        </div>
+
+        <hr class="hr" />
+
+        <div class="grid-2">
+          <article class="panel">
+            <h3>Prompting</h3>
+            <p>
+              Un prompt reduce ambigüedad con rol, objetivo, formato, límites y ejemplos.
+              Se mejora consistencia sin entrenar.
+            </p>
+            <div class="callout">
+              <b>Regla:</b> pedir formato y criterios (lista, tabla, JSON, pasos).
+            </div>
+          </article>
+
+          <article class="panel">
+            <h3>Datos</h3>
+            <p>
+              Limpieza y etiquetado aportan más que cambiar de arquitectura si el dataset está mal.
+              Calidad y trazabilidad son la base.
+            </p>
+            <div class="pill-row">
+              <span class="pill">Limpieza</span>
+              <span class="pill">Etiquetado</span>
+              <span class="pill">Balance</span>
+              <span class="pill">Privacidad</span>
+              <span class="pill">Trazabilidad</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    
+    
+    <section id="pipeline" class="section section--ai-detail"> 
+      <div class="wrap">
+        <h2>Pipeline de IA en detalle</h2> 
+        <p>
+          Estructura por fases: datos, representación, entrenamiento, evaluación, seguridad y despliegue.
+        </p>
+
+        <div class="ai-layout"> 
+
+          <article class="ai-main flow"> 
+
+            <section> 
+              <h3>1) Datos</h3> 
+              <ul> 
+                <li>Definir objetivo: qué se quiere predecir/generar y con qué límites.</li>
+                <li>Fuentes: bases internas, logs, APIs, documentos, imágenes o audio.</li>
+                <li>Limpieza: duplicados, ruido, valores faltantes y estandarización.</li>
+                <li>Etiquetado: reglas claras para consistencia.</li>
+                <li>Split: train/valid/test para medir generalización.</li>
+              </ul>
+              <div class="callout">
+                <b>Tip:</b> dataset limpio reduce errores en producción.
+              </div>
+            </section>
+
+            <section> 
+              <h3>2) Representación (features y embeddings)</h3> 
+              <ul> 
+                <li>Tabular: normalización, encoding y escalado.</li>
+                <li>Texto: embeddings para búsqueda semántica y clustering.</li>
+                <li>Imagen: vectores de características para clasificación o detección.</li>
+                <li>Vector DB: indexación kNN + filtros por metadata.</li>
+                <li>Chunking: trocear documentos sin perder sentido.</li>
+              </ul>
+            </section>
+
+            <section> 
+              <h3>3) Entrenamiento</h3> 
+              <div class="table-scroll"> 
+                <table class="table"> 
+                  <thead>
+                    <tr>
+                      <th>Tipo</th>
+                      <th>Ejemplos</th>
+                      <th>Cuándo usar</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Supervisado</td>
+                      <td>Regresión, clasificación</td>
+                      <td>Hay etiquetas claras (spam/no spam, precio, riesgo)</td>
+                    </tr>
+                    <tr>
+                      <td>No supervisado</td>
+                      <td>Clustering, reducción</td>
+                      <td>No hay etiquetas; se busca estructura</td>
+                    </tr>
+                    <tr>
+                      <td>Refuerzo</td>
+                      <td>Políticas, control</td>
+                      <td>Decisiones secuenciales (optimización, control)</td>
+                    </tr>
+                    <tr>
+                      <td>LLM + Prompting</td>
+                      <td>Instrucciones y formatos</td>
+                      <td>Se necesita rapidez sin entrenar</td>
+                    </tr>
+                    <tr>
+                      <td>Fine-tuning</td>
+                      <td>Ajuste con datos</td>
+                      <td>Estilo/tarea fija y dataset de calidad</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <p class="note">
+                Control de overfitting, regularización y reproducibilidad.
+              </p>
+            </section>
+
+            <section> 
+              <h3>4) Evaluación</h3> 
+              <ul> 
+                <li>Métricas: accuracy, precision/recall, F1, ROC-AUC según el caso.</li>
+                <li>LLMs: exactitud factual, formato, seguridad y consistencia.</li>
+                <li>Pruebas de regresión: no romper casos que ya iban bien.</li>
+                <li>Conjuntos "duros": ejemplos reales con ruido y ambigüedad.</li>
+                <li>Revisión humana: muestreo y criterios claros.</li>
+              </ul>
+            </section>
+
+            <section> 
+              <h3>5) Seguridad y riesgos</h3> 
+              <ul> 
+                <li>Privacidad: minimizar datos sensibles y aplicar controles.</li>
+                <li>Sesgo: revisar representatividad y reglas de decisión.</li>
+                <li>Prompt injection: separar instrucciones y limpiar contexto.</li>
+                <li>Alucinaciones: RAG, verificación y límites de respuesta.</li>
+                <li>Registro: trazabilidad de entradas/salidas para auditoría.</li>
+              </ul>
+              <div class="callout">
+                <b>Idea:</b> medir calidad, coste y riesgo de forma continua.
+              </div>
+            </section>
+
+            <section> 
+              <h3>6) Despliegue (Deploy)</h3> 
+              <ul> 
+                <li>API: endpoints, rate limit, caché y observabilidad.</li>
+                <li>Coste: tokens, latencia, batch vs realtime.</li>
+                <li>Monitorización: drift, métricas y alertas.</li>
+                <li>Versionado: modelo, prompts, dataset y parámetros.</li>
+                <li>Rollback: volver a una versión estable rápido.</li>
+              </ul>
+            </section>
+
+          </article>
+
+          <aside class="ai-aside"> 
+            <section class="stack-md"> 
+              <h4>Checklist rápido</h4>
+              <ul>
+                <li>Objetivo definido (tarea + límites).</li>
+                <li>Dataset limpio + split correcto.</li>
+                <li>Métricas adecuadas.</li>
+                <li>RAG si falta contexto.</li>
+                <li>Monitorización + logs.</li>
+              </ul>
+            </section>
+
+            <hr class="hr" />
+
+            <section class="stack-md"> 
+              <h4>Glosario rápido</h4>
+              <dl class="glossary">
+                <dt>Embedding</dt><dd>Vector que representa significado (texto/imagen).</dd>
+                <dt>RAG</dt><dd>Recuperación + generación con contexto externo.</dd>
+                <dt>Fine-tuning</dt><dd>Ajuste del modelo con datos específicos.</dd>
+                <dt>Drift</dt><dd>Cambio en datos reales respecto al entrenamiento.</dd>
+                <dt>Prompt</dt><dd>Instrucción para guiar salida del modelo.</dd>
+              </dl>
+            </section>
+
+            <hr class="hr" />
+
+            <section class="stack-md"> 
+              <h4>Consejos prácticos</h4>
+              <ul>
+                <li>Empezar con baseline simple y medir.</li>
+                <li>Evaluar con casos reales y regresión.</li>
+                <li>Reducir coste con caché y prompts cortos.</li>
+              </ul>
+            </section>
+          </aside>
+
+        </div>
+      </div>
+    </section>
+
+    
+    
+    <section id="aplicaciones" class="section"> 
+      <div class="wrap">
+        <h2>Aplicaciones reales de IA</h2> 
+        <p>
+          Casos de uso habituales en empresas, desarrollo, multimedia y automatización.
+        </p>
+
+        <div class="grid-2"> 
+          <article class="panel"> 
+            <h3>IA en empresas</h3>
+            <p>
+              Atención al cliente, clasificación de tickets, resumen de documentos y búsqueda semántica.
+            </p>
+            <ul>
+              <li>Soporte: respuestas sugeridas y priorización.</li>
+              <li>Ventas: scoring y segmentación.</li>
+              <li>Legal: extracción de cláusulas y resúmenes.</li>
+              <li>Producto: análisis de feedback y tendencias.</li>
+            </ul>
+          </article>
+
+          <article class="panel"> 
+            <h3>IA para desarrolladores</h3>
+            <p>
+              Generación de código, refactor, tests y documentación con control de formato y criterios.
+            </p>
+            <ul>
+              <li>Snippets y utilidades rápidas.</li>
+              <li>Revisión y detección de bugs.</li>
+              <li>Tests unitarios con casos límite.</li>
+              <li>Documentación y ejemplos consistentes.</li>
+            </ul>
+          </article>
+
+          <article class="panel"> 
+            <h3>IA en multimedia</h3>
+            <p>
+              Edición y generación con modelos: imagen, audio y vídeo con coherencia y control de artefactos.
+            </p>
+            <ul>
+              <li>Imagen: difusión, inpainting y upscaling.</li>
+              <li>Audio: TTS, limpieza y separación de voz.</li>
+              <li>Vídeo: resumen, subtítulos y doblaje.</li>
+              <li>Contenido: guiones, ideas y variantes.</li>
+            </ul>
+          </article>
+
+          <article class="panel"> 
+            <h3>IA y educación</h3>
+            <p>
+              Creación de ejercicios, corrección y feedback con rúbricas y criterios de evaluación.
+            </p>
+            <ul>
+              <li>Explicaciones paso a paso.</li>
+              <li>Casos prácticos y rúbricas.</li>
+              <li>Plan de estudio por objetivos.</li>
+              <li>Corrección guiada con criterios.</li>
+            </ul>
+          </article>
+        </div>
+
+        <hr class="hr" />
+
+        
+        
+        <div class="cards" role="list"> 
+          <article class="card" role="listitem" data-title="tecnologia servidor nube cloud"> 
+            <!-- FALLO 6: imagen sin alt -->
+            <img
+              src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1400&q=80"
+            /> 
+            <div class="card__body">
+              <h3>Cloud + IA</h3>
+              <p>Infraestructura, escalado, costes y observabilidad para modelos en producción.</p>
+              <div class="card__meta">
+                <span class="tag">Cloud</span>
+                <span class="tag alt">Deploy</span>
+                <span class="tag warn">Coste</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="card" role="listitem" data-title="datos big data analytics dashboard"> 
+            <!-- FALLO 6: imagen sin alt -->
+            <img
+              src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1400&q=80"
+            /> 
+            <div class="card__body">
+              <h3>Datos</h3>
+              <p>ETL, calidad, gobierno del dato y datasets trazables para entrenar sin sorpresas.</p>
+              <div class="card__meta">
+                <span class="tag">ETL</span>
+                <span class="tag alt">Calidad</span>
+                <span class="tag">Trazabilidad</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="card" role="listitem" data-title="automatizacion robots industria ai iot"> 
+            <!-- FALLO 6: imagen sin alt -->
+            <img
+              src="https://images.unsplash.com/photo-1581092919535-7146c98d36d5?auto=format&fit=crop&w=1400&q=80"
+            /> 
+            <div class="card__body">
+              <h3>Automatización</h3>
+              <p>Agentes, IoT y pipelines: ejecutar, verificar y entregar resultados con control.</p>
+              <div class="card__meta">
+                <span class="tag">Agentes</span>
+                <span class="tag alt">IoT</span>
+                <span class="tag ok">Workflows</span>
+              </div>
+            </div>
+          </article>
+        </div>
+
+      </div>
+    </section>
+
+    
+    <section id="guia" class="section section--alt"> 
+      <div class="wrap">
+        <h2>Guía de diseño — 6 puntos</h2> 
+
+        <div class="grid-2"> 
+
+          <div class="panel"> 
+            <h3>Buenas prácticas visuales</h3>
+            <ol class="flow"> 
+              <li><strong>Coherencia visual:</strong> paleta 3–5 colores y estilo uniforme.</li>
+              <li><strong>Jerarquía clara:</strong> títulos fuertes, texto secundario suave.</li>
+              <li><strong>Espacios:</strong> márgenes y paddings para respirar.</li>
+              <li><strong>Navegación:</strong> menús claros también en móviles.</li>
+              <li><strong>Optimización:</strong> imágenes comprimidas y carga rápida.</li>
+              <li><strong>Elementos destacados:</strong> botones visibles y hover suave.</li>
+            </ol>
+          </div>
+
+          <div class="panel"> 
+            <h3>Guía de contenido IA</h3>
+            <div class="table-scroll"> 
+              <table class="table"> 
+                <thead>
+                  <tr>
+                    <th>Bloque</th>
+                    <th>Qué aporta</th>
+                    <th>Ejemplo</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Definición</td>
+                    <td>Contexto rápido</td>
+                    <td>Qué es RAG</td>
+                  </tr>
+                  <tr>
+                    <td>Lista</td>
+                    <td>Puntos clave</td>
+                    <td>Pasos del pipeline</td>
+                  </tr>
+                  <tr>
+                    <td>Tabla</td>
+                    <td>Comparación</td>
+                    <td>ML vs DL vs LLM</td>
+                  </tr>
+                  <tr>
+                    <td>Checklist</td>
+                    <td>Acción</td>
+                    <td>Antes de deploy</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    
+    
+    <section class="section" id="contacto"> 
+      <div class="wrap">
+        <h2>Contacto</h2> 
+        <div class="grid-2"> 
+          <div class="panel"> 
+            <h3>Formulario</h3> 
+            <!-- FALLO 7: formulario sin etiquetas label asociadas correctamente -->
+            <form method="post"> 
+              <div style="display:flex; gap:12px; flex-wrap:wrap;"> 
+                <div style="flex:1 1 260px;"> 
+                  <!-- FALLO 7: span usado en lugar de label con for -->
+                  <span style="display:block; font-weight:800; color:rgba(232,232,234,.92); margin:0 0 6px;">Nombre</span> 
+                  <!-- FALLO 5: input inaccesible por teclado -->
+                  <input tabindex="-1" id="nombre" name="nombre" type="text" placeholder="Nombre"
+                    style="width:100%; background:rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.10); border-radius:12px; color:rgba(232,232,234,.95); padding:10px 12px;" /> 
+                </div>
+
+                <div style="flex:1 1 260px;"> 
+                  <span style="display:block; font-weight:800; color:rgba(232,232,234,.92); margin:0 0 6px;">Asunto</span> 
+                  <input tabindex="-1" id="asunto" name="asunto" type="text" placeholder="Asunto"
+                    style="width:100%; background:rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.10); border-radius:12px; color:rgba(232,232,234,.95); padding:10px 12px;" /> 
+                </div>
+              </div>
+
+              <div style="margin-top:12px;"> 
+                <span style="display:block; font-weight:800; color:rgba(232,232,234,.92); margin:0 0 6px;">Email</span> 
+                <input tabindex="-1" id="email" name="email" type="email" placeholder="email@correo.com"
+                  style="width:100%; background:rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.10); border-radius:12px; color:rgba(232,232,234,.95); padding:10px 12px;" /> 
+              </div>
+
+              <div style="margin-top:12px;"> 
+                <span style="display:block; font-weight:800; color:rgba(232,232,234,.92); margin:0 0 6px;">Mensaje</span> 
+                <textarea tabindex="-1" id="mensaje" name="mensaje" placeholder="Mensaje..."
+                  style="width:100%; min-height:130px; resize:vertical; background:rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.10); border-radius:12px; color:rgba(232,232,234,.95); padding:10px 12px;"></textarea> 
+              </div>
+
+              <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;"> 
+                <!-- FALLO 5: botones del formulario inaccesibles -->
+                <button tabindex="-1" class="btn" type="submit" name="enviar">Enviar</button> 
+                <button tabindex="-1" class="btn secondary" type="reset">Limpiar</button> 
+              </div>
+            </form>
+          </div>
+
+          <div class="panel"> 
+            <h3>Checklist de proyecto IA</h3>
+            <ul>
+              <li>Objetivo + métrica (qué es "éxito").</li>
+              <li>Datos: fuente, limpieza, split.</li>
+              <li>Modelo: baseline, prompt o fine-tuning.</li>
+              <li>Evaluación: casos reales, regresión.</li>
+              <li>Deploy: monitorización y control de costes.</li>
+            </ul>
+            <div class="callout">
+              <b>Nota:</b> imágenes online y temática tecnología/IA.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  
+  
+  <footer class="site-footer"> 
+    <div class="wrap footer__inner"> 
+      <p>&copy; 2025 AILab — Flexbox + Semántica + Diseño (Tema IA)</p> 
+
+      
+      <div class="social"> 
+        <!-- FALLO 4 y 5: enlaces de redes sociales sin color distinguible y sin acceso por teclado -->
+        <a tabindex="-1" href="#" title="X">X</a> 
+        <a tabindex="-1" href="#" title="IG">IG</a> 
+        <a tabindex="-1" href="#" title="GH">GH</a> 
+        <a tabindex="-1" href="#" title="IN">IN</a> 
+      </div>
+    </div>
+  </footer>
+
+  
+  <!-- FALLO 14: modal sin controles de tiempo para auto-cierre -->
+  <div id="modal" class="modal"> 
+    <div class="modal__dialog"> 
+      <div class="modal__top"> 
+        <div class="modal__title" id="modalTitle">Detalle</div> 
+        <!-- FALLO 5: botón de cerrar modal inaccesible -->
+        <button tabindex="-1" class="modal__close" id="modalClose" type="button">×</button> 
+      </div>
+      <div class="modal__body"> 
+        <div class="modal__grid"> 
+          <!-- FALLO 6: imagen del modal sin alt -->
+          <img id="modalImg" class="modal__img" src="" /> 
+          <div>
+            <p id="modalDesc">...</p> 
+            <ul id="modalList"> 
+              <li>...</li>
+            </ul>
+            <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;"> 
+              <!-- FALLO 5: botones del modal inaccesibles -->
+              <button tabindex="-1" class="btn" id="modalGo" type="button">Ir a sección</button> 
+              <button tabindex="-1" class="btn secondary" id="modalCopy" type="button">Copiar resumen</button> 
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
